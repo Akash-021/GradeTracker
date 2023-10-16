@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "532527658560",
+    "project_id": "gradetracker-2c039",
+    "storage_bucket": "gradetracker-2c039.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532527658560:android:ee3c6ce55350f53d51d1a5",
+        "android_client_info": {
+          "package_name": "com.amrita.GradeTracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXKRy-xuj9yMYgtXRlNlc3UbkAIMu3dlE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
