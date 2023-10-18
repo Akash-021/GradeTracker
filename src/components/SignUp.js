@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
 //import { firebase } from './../../firebase'; // Import your Firebase configuration
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -12,21 +12,42 @@ import CourseDetail from './CourseDetail';
 import Login from './Login';
 import Root from './DrawerNavigator';
 
+function createSemesterObject(n) {
+  if (n <= 0) {
+    return {};
+  }
+
+  const semesterObject = {};
+  for (let i = 1; i <= n; i++) {
+    const semester = `sem ${i}`;
+    semesterObject[semester] = [];
+  }
+
+  return semesterObject;
+}
+
+
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [sem, setSemester] = useState('');
+
 
   const handleSignUp = async () => {
+    if(!email || !password || !sem) {return}
+    console.log("signing up..")
     try {
       const { user } = await auth().createUserWithEmailAndPassword(email, password);
 
       await firestore().collection('Users').doc(user.uid).set({
               email: email,
-              // Add other user information fields as needed
-              // Store the Firebase Authentication UID for reference
               displayName: "",
               uid: user.uid,
+              totalSem: Number(sem),
+              sem_sgpa: new Array(Number(sem)).fill(0),
+              cgpa: Number(0),
             });
+      await firestore().collection('Users').doc(user.uid).collection('CourseList').doc().set(createSemesterObject(Number(sem)));
       // If registration is successful, navigate to the dashboard or desired screen
       navigation.navigate('Root', { screen: 'Dashboard' });
     } catch (error) {
@@ -35,8 +56,22 @@ const SignUp = ({ navigation }) => {
     }
   };
 
+  function onChanged (text) {
+    setSemester(text.replace(/[^0-9]/g, ''));
+  }
+
+  function quickSignUp(){
+    setEmail("abc@gmail.com");
+    setPassword("123456");
+    setSemester("8");
+    // handleSignUp();
+  }
+
   return (
     <View style={styles.container}>
+
+      <Image source={require('./../assets/logo.png')} style={styles.image} />
+
       <Text style={styles.title}>Sign Up</Text>
       <TextInput
         style={styles.input}
@@ -51,7 +86,16 @@ const SignUp = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
+      <TextInput 
+        style={styles.input}
+        placeholder="Total Semesters"
+        keyboardType='numeric'
+        onChangeText={(text)=> onChanged(text)}
+        value={sem}
+        maxLength={10}
+      />
       <Button title="SignUp" onPress={handleSignUp} />
+      <Button title="QuickSignUp" onPress={quickSignUp} />
       <Text onPress={() => navigation.navigate('Login')} style={styles.link}>
         Already have an account? Log in here.
       </Text>
@@ -62,10 +106,18 @@ const SignUp = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 20,
+    paddingTop: 50,
   },
+  image: {
+    width: 230, // Set the desired width
+    height: 200, // Set the desired height
+    resizeMode: 'cover', // Adjust the resizeMode as needed
+    marginTop:0,
+  },
+
   title: {
     fontSize: 24,
     marginBottom: 20,

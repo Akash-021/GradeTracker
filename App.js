@@ -17,6 +17,9 @@ import AuthStackNavigator from './src/components/AuthStackNavigator';
 
 import { initializeApp } from '@firebase/app';
 import auth from '@react-native-firebase/auth';
+import AddNewCourse from './src/components/AddNewCourse';
+import Temp from './src/components/Temp';
+import ViewCourse from './src/components/ViewCourse';
 
 const Stack = createStackNavigator();
 
@@ -39,6 +42,9 @@ const App = () => {
       <Stack.Navigator initialRouteName={user ? 'Root' : 'AuthStackNavigator'} screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Root" component={Root} />
             <Stack.Screen name="AuthStackNavigator" component={AuthStackNavigator} />
+            <Stack.Screen name="AddNewCourse" component={AddNewCourse} />
+            <Stack.Screen name="ViewCourse" options={{headerShown: true,}} component={ViewCourse} />
+            <Stack.Screen name="Temp" component={Temp} />
       </Stack.Navigator>
 
     </NavigationContainer>

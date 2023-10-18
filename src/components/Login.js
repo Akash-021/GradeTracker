@@ -29,6 +29,11 @@ const Login = () => {
     navigation.navigate('AuthStackNavigator', { screen: 'SignUp' });
   };
 
+  function quickLogin(){
+    setEmail("abc@gmail.com");
+    setPassword("123456");;
+    // handleSignUp();
+  }
   return (
     <View style={styles.container}>
       <Image source={require('./../assets/logo.png')} style={styles.image} />
@@ -47,6 +52,7 @@ const Login = () => {
         value={password}
         onChangeText={setPassword}
       />
+      <Button title="QucikLogin" onPress={quickLogin} />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
