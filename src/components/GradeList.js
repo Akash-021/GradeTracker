@@ -8,7 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 const GradeList = ({navigation}) => {
   const [sem_sgpa, setSemSGPA] = useState([]);
   const [currentUser, setCurrentUser] = useState();
-  
+  const [forceIt,setForceIt] = useState(true);
   
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,7 +31,14 @@ const GradeList = ({navigation}) => {
 
   useEffect(() => {
     console.log('Updated sem_sgpa:', sem_sgpa);
-  }, [sem_sgpa]);
+    const updateObj = {}
+    const sem_sgpaId = `sem_sgpa`
+    updateObj[sem_sgpaId] = sem_sgpa
+    const updateSemSgpa = async () => {
+      await firestore().collection('Users').doc(currentUser.uid).update(updateObj);
+    }
+    updateSemSgpa()
+  }, [forceIt]);
 
   
   
@@ -42,7 +49,7 @@ const GradeList = ({navigation}) => {
         <Text style = {styles.sectionTitle}>Semester SGPAs</Text>
         {sem_sgpa.map((sgpa, index) => (
       <View style={styles.sems} key={index}>
-        <SemItem text={sgpa.toString()} sem={index} style={styles.semval} />
+        <SemItem text={sgpa.toString()} sem={index} sgpa={sem_sgpa} updateSgpa={(value) => {setSemSGPA(value); setForceIt(!forceIt);console.log("temp check semsgpa",sem_sgpa)}} style={styles.semval} />
       </View>
     ))}
       </View>

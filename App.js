@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import 'react-native-gesture-handler';
+import { LogBox } from 'react-native';
 
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -22,12 +23,11 @@ import Temp from './src/components/Temp';
 import ViewCourse from './src/components/ViewCourse';
 
 const Stack = createStackNavigator();
-
-
-
+LogBox.ignoreAllLogs(true)
 const App = () => {
     const [user, setUser] = useState(null);
-
+    
+    
     useEffect(() => {
     // Set up the Firebase authentication state observer
         const unsubscribe = auth().onAuthStateChanged((user) => {

@@ -1,12 +1,26 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Button, Modal, TextInput, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import ImageButton from './ImageButton';
 
 
 const SemItem = (props) => {
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [inputSgpa, setInputSgpa] = useState('');
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+
   function editPressed(){
     console.log("editing sgpa of sem:",props.sem)
+    console.log("curr sgpa :",props.sgpa)
+    const sg = props.sgpa
+    sg[props.sem] = Number(inputSgpa)
+    console.log("temp sgps:",sg)
+    props.updateSgpa(sg)
+    handleModal()
+
+  }
+  function onChanged (text) {
+    setInputSgpa(text.replace(/[^0-9]/g, ''));
   }
 
 
@@ -26,7 +40,23 @@ const SemItem = (props) => {
           <View style={styles.buttonContainer}>
             <ImageButton 
               src={"https://cdn-icons-png.flaticon.com/512/84/84380.png"} 
-              onClick={editPressed}/>
+              onClick={handleModal}/>
+            {isModalVisible && <Modal animationType = {"fade"}  
+          transparent = {true} isVisible={isModalVisible}>
+            <View style={{backgroundColor:'rgba(0,0,0,0.5)',flex:1, paddingTop:100,}}>
+              <View style = {styles.modal}>
+                <TextInput
+                    style={styles.input}
+                    keyboardType='numeric'
+                    placeholder='Enter SGPA'
+                    onChangeText={(text)=> onChanged(text)}
+                    value={inputSgpa}
+                    maxLength={10}
+                />
+                <TouchableOpacity style={styles.buttonContainer1} onPress={editPressed}><Text style={styles.buttonText}>Apply</Text></TouchableOpacity>
+              </View>
+              </View>
+            </Modal>}
           </View>
 
       </View>
@@ -35,6 +65,19 @@ const SemItem = (props) => {
 };
 
 const styles = StyleSheet.create({
+  modal: {  
+    justifyContent: 'center',  
+    alignItems: 'center',   
+    backgroundColor : 'white',   
+    height: 200 ,  
+    width: '80%',  
+    borderRadius:10,  
+    borderWidth: 1,  
+    borderColor: '#fff',    
+    marginTop: 200,  
+    marginLeft: 40,  
+     
+     },  
   bg: {
     backgroundColor: 'white',
     padding: 20,
@@ -99,12 +142,40 @@ const styles = StyleSheet.create({
     marginLeft:50
   },
 
-
   rightContainer:{
     flexDirection:"row",
     alignItems:"space-between",
     alignItems: 'center',
-  }
+  },
+  input: {
+    width: '60%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    borderRadius:10,
+    padding: 10,
+  },
+  buttonContainer1: {
+    width: 120,
+    height: 50,
+    backgroundColor: '#90A4AE', // A nice shade of blue
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#34495e', // Slightly darker shadow color
+    shadowOffset: { width: 0, height: 4 }, // Bigger shadow
+    shadowOpacity: 0.7, // Stronger shadow
+    shadowRadius: 3, // Larger shadow radius
+    marginTop: 15,
+
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
 });
 
 export default SemItem;

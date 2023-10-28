@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, Pressable } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, Pressable, TouchableOpacity } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -95,11 +95,11 @@ const UserProfile = () => {
           <Button title="Save" onPress={handleSaveProfile} />
         </View>
       ) : (
-        <View>
+        <View style={{marginTop:30}}>
           <Text style={styles.input}><Text style={{fontWeight: "bold"}}>Name:</Text> {displayName}</Text>
           <Text style={styles.input}><Text style={{fontWeight: "bold"}}>Email:</Text> {email}</Text>
           {/* <Pressable style={styles.button} onPress={() => setIsEditing(true)}><Text style={styles.Text}>Edit Profile</Text></Pressable> */}
-          <Button title="Edit Profile" onPress={()=>{setIsEditing(true)}} />
+          <TouchableOpacity style={styles.buttonContainer} onPress={()=>{setIsEditing(true)}}><Text>Edit Profile</Text></TouchableOpacity>
         </View>
       )}
     </View>
@@ -109,9 +109,10 @@ const UserProfile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "flex-start",
     alignItems: 'center',
     padding: 20,
+    marginTop:50,
   },
   title: {
     fontSize: 24,
@@ -123,7 +124,9 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 10,
     padding: 10,
-    color:"black"
+    color:"black",
+    backgroundColor:"lightgrey",
+    borderRadius:10
   },
   text_input: {
     width: '100%',
@@ -145,7 +148,28 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal:5,
     backgroundColor:"lightblue",
-  }
+  },
+  buttonContainer: {
+    width: 120,
+    height: 50,
+    backgroundColor: '#90A4AE', // A nice shade of blue
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#34495e', // Slightly darker shadow color
+    shadowOffset: { width: 0, height: 4 }, // Bigger shadow
+    shadowOpacity: 0.7, // Stronger shadow
+    shadowRadius: 3, // Larger shadow radius
+    marginTop: 15,
+    marginLeft:20,
+
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
 });
 
 export default UserProfile;

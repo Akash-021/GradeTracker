@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Button, Image, StyleSheet } from 'react-native';
+import { View, Text, Button, Image, StyleSheet, ScrollView, Pressable } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import CalendarComp from './CalendarComp';
 
 const Dashboard = ({ navigation }) => {
   const [sem_sgpa, setSemSGPA] = useState([]);
   const [currentUser, setCurrentUser] = useState();
   const [cgpa,setCgpa] = useState(0);
-  
-  
+
   useEffect(() => {
     const fetchUser = async () => {
       const userdata = await firestore().collection('Users').doc(currentUser.uid).get();
@@ -21,6 +21,24 @@ const Dashboard = ({ navigation }) => {
       console.log("gl user:",currentUser.uid)
     }
   },[currentUser])
+
+  useEffect(() => {
+    if (currentUser) {
+      const unsubscribe = firestore()
+        .collection('Users')
+        .doc(currentUser.uid)
+        .onSnapshot((documentSnapshot) => {
+          if (documentSnapshot.exists) {
+            const ss = documentSnapshot.data().sem_sgpa;
+            console.log('ss live:',ss)
+            setSemSGPA(ss);
+            console.log("live update of sgpas recieved");
+          }
+        });
+
+      return () => unsubscribe();
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     cu = auth().currentUser;
@@ -68,12 +86,11 @@ const Dashboard = ({ navigation }) => {
   }
 
   return (
-    <View>
-      <Text style={styles.heading}>Welcome to the Dashboard</Text>
+    <ScrollView>
       <Text style={styles.gradeDisplay}>Your current CGPA: {cgpa} </Text>
 
-      <View style={styles.card} onTouchStart={gotoCoursesPage}>
-        <Text style={{fontSize:20,color:"black", paddingTop: 10, paddingBottom: 15, textAlign: 'center'}}>Courses</Text>
+      <Pressable style={styles.card} onPress={gotoCoursesPage}>
+        <Text style={{fontSize:20,color:"black", paddingTop: 6, paddingBottom: 10, textAlign: 'center'}}>Courses</Text>
         
           <View style={styles.user}>
             <Image
@@ -82,18 +99,15 @@ const Dashboard = ({ navigation }) => {
               source={{ uri: "https://cdn.theatlantic.com/thumbor/5T-358hrx4dcsOlQKo024rmLHf4=/0x0:2000x1125/1600x900/media/img/mt/2023/07/books_picku_up_put_down_final/original.jpg" }}
               />
           </View>
-          </View>
+          </Pressable>
 
-      <View style={styles.card}>
-        <Text style={{fontSize:20,color:"black", paddingTop: 10, paddingBottom: 15, textAlign: 'center'}}>Calendar</Text>
+      <View style={styles.card2}>
+        <Text style={{fontSize:20,color:"black", paddingTop: 2, paddingBottom: 4, textAlign: 'center'}}>Calendar</Text>
+        <CalendarComp></CalendarComp>
         
       </View>
 
-
-      <View style={styles.logoutContainer}>
-        <Button title='Logout' onPress={logMeOut}/>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -129,10 +143,22 @@ const styles = StyleSheet.create({
     borderColor:"rgba(0,0,0,0.15)",
     marginBottom:16,
   },
+  card2:{
+    height:400,
+    width:"90%",
+    backgroundColor:"white",
+    marginHorizontal:15,
+    padding:10,
+    color:"black",
+    borderRadius:10,
+    borderWidth:1,
+    borderColor:"rgba(0,0,0,0.15)",
+    marginBottom:8,
+  },
 
   image: {
     width: "90%", // Set the desired width
-    height: 170, // Set the desired height
+    height: 180, // Set the desired height
     resizeMode: 'cover', // Adjust the resizeMode as needed
     justifyContent: 'center',
     alignContent: 'center',
@@ -147,6 +173,7 @@ const styles = StyleSheet.create({
     color:"black",
     padding:3,
     paddingTop:8,
+    marginTop:12,
     paddingLeft:10,
     borderWidth:1,
     borderColor:"rgba(0,0,0,0.15)",

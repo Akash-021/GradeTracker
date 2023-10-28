@@ -95,7 +95,7 @@ const SignUp = ({ navigation }) => {
         maxLength={10}
       />
       <Button title="SignUp" onPress={handleSignUp} />
-      <Button title="QuickSignUp" onPress={quickSignUp} />
+      {/* <Button title="QuickSignUp" onPress={quickSignUp} /> */}
       <Text onPress={() => navigation.navigate('Login')} style={styles.link}>
         Already have an account? Log in here.
       </Text>

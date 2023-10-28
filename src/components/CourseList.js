@@ -6,7 +6,6 @@ import auth from '@react-native-firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AddNewCourse from './AddNewCourse';
 import ViewCourse from './ViewCourse';
-import TempScreen from './TempScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -115,7 +114,7 @@ const CourseList = () => {
 
   return (
   <Tab.Navigator tabBarOptions={{ tabStyle: { width: 90,},}} screenOptions={{ tabBarScrollEnabled: true,tabBarIndicatorStyle:{
-    backgroundColor:"lightgrey",
+    backgroundColor:"#8b7afa",
     height:5,
 } }}
 sceneContainerStyle={{ backgroundColor: "white" }}>

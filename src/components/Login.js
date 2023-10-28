@@ -52,7 +52,7 @@ const Login = () => {
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="QucikLogin" onPress={quickLogin} />
+      {/* <Button title="QucikLogin" onPress={quickLogin} /> */}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
