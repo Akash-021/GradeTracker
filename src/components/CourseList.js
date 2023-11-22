@@ -22,7 +22,7 @@ const TabScreenComponent = ({sem, sgpa, courses}) => {
 
   function navigateToCourseItem(item){
     console.log("navig", item)
-    navig.navigate("ViewCourse",{course : item})
+    navig.navigate("ViewCourse",{courses : item, sem: sem})
   }
 
   const Item = ({obj}) => (
@@ -51,7 +51,7 @@ const TabScreenComponent = ({sem, sgpa, courses}) => {
         />
         
         <TouchableOpacity onPress={navigateToCourseCreation} style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>Add Course</Text>
+          <Text style={styles.buttonText}>Add/Edit Course</Text>
         </TouchableOpacity>
     </SafeAreaView>
   );
@@ -66,7 +66,6 @@ const CourseList = () => {
   const [selectedSem, setSelectedSem] = useState(0);
   const [currentUser, setCurrentUser] = useState();
   const Tab = createMaterialTopTabNavigator();
-  const [forceUpdate,SetForceUpdate] = useState(1);
 
   
   useFocusEffect(
@@ -107,47 +106,47 @@ const CourseList = () => {
     semNames.push("Sem " + (i + 1))
   }
 
-  function changeTab(sem){
-    const val = Number(sem.split("Sem")[1])
-    setSelectedSem(val)
-  }
+  // function changeTab(sem){
+  //   const val = Number(sem.split("Sem")[1])
+  //   setSelectedSem(val)
+  // }
 
   return (
-  <Tab.Navigator tabBarOptions={{ tabStyle: { width: 90,},}} screenOptions={{ tabBarScrollEnabled: true,tabBarIndicatorStyle:{
-    backgroundColor:"#8b7afa",
-    height:5,
-} }}
-sceneContainerStyle={{ backgroundColor: "white" }}>
-    {semNames.length == 0 && <Tab.Screen tabBarLabelStyle={{ width: 1000 }}
-  name="Loading..."
-  key="Sem0"
->
-  {() => (
-    <TabScreenComponent
-      sem={0}
-      sgpa={sgpa[0]}
-      courses={coursesList['sem 0']}
-    />
-  )}
-</Tab.Screen>
-    }
-
-{semNames &&
-  semNames.map((item, idx) => (
-    <Tab.Screen tabBarLabelStyle={{ width: 1000 }}
-      name={item}
-      key={item}
-    >
+    <Tab.Navigator tabBarOptions={{ tabStyle: { width: 90,},}} screenOptions={{ tabBarScrollEnabled: true,tabBarIndicatorStyle:{
+      backgroundColor:"#8b7afa",
+      height:5,
+      } }}
+    sceneContainerStyle={{ backgroundColor: "white" }}>
+    {semNames.length == 0 && 
+      <Tab.Screen tabBarLabelStyle={{ width: 1000 }}
+      name="Loading..."
+      key="Sem0">
       {() => (
         <TabScreenComponent
-          sem={idx + 1}
-          sgpa={sgpa[idx]}
-          courses={coursesList[`sem ${idx + 1}`]}
+          sem={0}
+          sgpa={sgpa[0]}
+          courses={coursesList['sem 0']}
         />
       )}
-    </Tab.Screen>
-  ))
-}
+      </Tab.Screen>
+    }
+
+    {semNames &&
+      semNames.map((item, idx) => (
+        <Tab.Screen tabBarLabelStyle={{ width: 1000 }}
+          name={item}
+          key={item}
+        >
+          {() => (
+            <TabScreenComponent
+              sem={idx + 1}
+              sgpa={sgpa[idx]}
+              courses={coursesList[`sem ${idx + 1}`]}
+            />
+          )}
+        </Tab.Screen>
+      ))
+    }
   </Tab.Navigator>
   );
 };

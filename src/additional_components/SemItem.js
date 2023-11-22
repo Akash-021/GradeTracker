@@ -19,9 +19,6 @@ const SemItem = (props) => {
     handleModal()
 
   }
-  function onChanged (text) {
-    setInputSgpa(text.replace(/[^0-9]/g, ''));
-  }
 
 
   return (
@@ -45,11 +42,17 @@ const SemItem = (props) => {
           transparent = {true} isVisible={isModalVisible}>
             <View style={{backgroundColor:'rgba(0,0,0,0.5)',flex:1, paddingTop:100,}}>
               <View style = {styles.modal}>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={handleModal}
+              >
+                <Text style={styles.closeButtonText}>&#10006;</Text>
+              </TouchableOpacity>
                 <TextInput
                     style={styles.input}
                     keyboardType='numeric'
                     placeholder='Enter SGPA'
-                    onChangeText={(text)=> onChanged(text)}
+                    onChangeText={(text)=> setInputSgpa(text.replace(/[^0-9]/g, ''))}
                     value={inputSgpa}
                     maxLength={10}
                 />
@@ -175,6 +178,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textTransform: 'uppercase',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'red', // or any color you prefer
   },
 });
 

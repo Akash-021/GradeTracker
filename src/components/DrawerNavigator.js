@@ -1,7 +1,6 @@
 import React from 'react';
 import { createDrawerNavigator, drawerIcon } from '@react-navigation/drawer';
 import Dashboard from './Dashboard'; // Import your Dashboard component
-import CourseDetail from './CourseDetail'; // Import your GradeTracker component
 import CourseList from './CourseList'; // Import your StudyPlanner component
 import UserProfile from './UserProfile';
 import AuthStackNavigator from './AuthStackNavigator';
@@ -25,7 +24,8 @@ const Root = ({ navigation }) => {
     }
   }
   return (
-    <Drawer.Navigator initialRouteName="Dashboard" screenOptions={{
+    <Drawer.Navigator initialRouteName="Dashboard" 
+    screenOptions={{
       headerTintColor:"white",
       drawerStyle: {
         backgroundColor: '#8b7afa',
@@ -48,8 +48,12 @@ const Root = ({ navigation }) => {
         color:"white"
       }
     }}>
-      <Drawer.Screen options={{drawerLabel: () => null,drawerItemStyle:{backgroundColor:"#8b7afa",height:50}}} name="test" 
-                              component={()=>{return (<View><Text>test</Text></View>)}}/>
+      <Drawer.Screen options={{ headerRight: () => (
+          <TouchableOpacity onPress={logMeOut}>
+              <Text style={{color:'white',padding:10,fontWeight:'bold'}}>LOGOUT</Text>
+          </TouchableOpacity>
+        ), headerTitle:"Grade Tracker", drawerLabel: () => null,drawerItemStyle:{backgroundColor:"#8b7afa",height:50}}} name="test" 
+                              component={Dashboard}/>
       <Drawer.Screen name="Dashboard" component={Dashboard} options={{
         drawerLabel:"Grade Tracker",
         headerTitle:"Grade Tracker",

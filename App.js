@@ -10,7 +10,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './src/components/Login';
 import Dashboard from './src/components/Dashboard';
 import CourseList from './src/components/CourseList';
-import CourseDetail from './src/components/CourseDetail';
 import SignUp from './src/components/SignUp';
 import ForgotPassword from './src/components/ForgotPassword';
 import Root from './src/components/DrawerNavigator';

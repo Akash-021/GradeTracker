@@ -9,39 +9,87 @@ export default function AddNewCourse({route}) {
   const [courseName, setCourseName] = useState('');
   const [credits, setCredits] = useState('');
   const [description, setDescription] = useState('');
+  const [studentGrade, setStudentGrade] = useState('');
+  const [marks, setMarks] =useState([]);
+  const [trigger,setTrigger] = useState(false);
+
+
+  const [Courses, setCourses] = useState(null);
+
   const { sem } = route.params;
   const navig = useNavigation();
   const currentUser = auth().currentUser;
-  function onChanged (text) {
-    setCredits(text.replace(/[^0-9]/g, ''));
-  }
 
-  const handleAddCourse = async () => {
-    const cItem = {
-      cname: courseName,
-      credits: credits,
-      cdesc: description,
-      marks: []
+  useEffect(() => {
+    const getCourses = async ()  => {tempCourses = await firestore().collection('Users').doc(currentUser.uid).collection('CourseList').get(); setCourses(tempCourses);}
+    getCourses();
+  },[])
+
+  useEffect(() => {
+      // This effect runs whenever marks state is updated
+      if (Courses!=null)
+      {
+          const cItem = {
+          cname: courseName,
+          credits: credits,
+          cdesc: description,
+          student_grade: studentGrade,
+          marks: marks,
+        }
+
+        console.log("sbdfrge",Courses);
+        const semId = `sem ${sem}`
+
+        let courseSemList = Courses.docs[0].data()[semId]
+        console.log("from db:", courseSemList)
+        // to get the marks if want to delete the value
+        const courseIndex = courseSemList.findIndex((item) => item.cname === courseName);
+        console.log("Asdfs",courseIndex);
+        let temp_mark = [];
+        if (courseIndex!==-1)
+        {
+          temp_mark = courseSemList[courseIndex].marks;
+          console.log("Asd",temp_mark);
+        }
+        console.log("Asd2",temp_mark);
+        setMarks(temp_mark)
+        console.log('Marks updated:', marks);
     }
+    }, [courseName]);
 
-    const Courses = await firestore().collection('Users').doc(currentUser.uid).collection('CourseList').get();
+    useEffect(() => {
+      if (marks.length>0)
+      {
+        console.log("ngsd",marks);
+      }
+    },[marks])
+  
+
+  const handleAddCourse = () => {
     const docId = Courses.docs[0].id
     const semId = `sem ${sem}`
 
     let courseSemList = Courses.docs[0].data()[semId]
-    console.log("from db:", courseSemList)
-
-    // removing old item if it exists
+    console.log("from db2:", courseSemList)
+      // removing old item if it exists
     courseSemList = courseSemList.filter(item=>item.cname != courseName)
     console.log("removing dup:", courseSemList)
-
+    const cItem = {
+      cname: courseName,
+      credits: credits,
+      cdesc: description,
+      student_grade: studentGrade,
+      marks: marks,
+    }
     // adding neew item
     courseSemList.push(cItem)
     console.log("adding new item:",courseSemList)
 
     const updateObj = {}
     updateObj[semId] = courseSemList
-    await firestore().collection('Users').doc(currentUser.uid).collection('CourseList').doc(docId).update(updateObj);
+    
+    const updatefirestore = async () => {await firestore().collection('Users').doc(currentUser.uid).collection('CourseList').doc(docId).update(updateObj);}
+    updatefirestore()
     navig.goBack()
   }
 
@@ -58,15 +106,22 @@ export default function AddNewCourse({route}) {
         style={styles.input}
         keyboardType='numeric'
         placeholder='Credits'
-        onChangeText={(text)=> onChanged(text)}
+        onChangeText={(text)=> setCredits(text.replace(/[^0-9]/g, ''))}
         value={credits}
         maxLength={10}
       />
       <TextInput
         style={styles.input}
-        placeholder="Course Description"
+        placeholder="Course Name"
         value={description}
         onChangeText={setDescription}
+      />
+      <TextInput
+        style={styles.input}
+        keyboardType='numeric'
+        placeholder="Grade"
+        onChangeText={(text)=> setStudentGrade(text.replace(/[^0-9.]/g, ''))}
+        value={studentGrade}
       />
       {/* <Button title="Add Course" onPress={handleAddCourse} /> */}
       <TouchableOpacity onPress={handleAddCourse} style={styles.buttonContainer}>
